@@ -11,7 +11,7 @@ namespace First.Controllers
     {
         CRUD_Orders _Orders = new CRUD_Orders();
 
-        public ActionResult Index(Table i ,int k)
+        public ActionResult Index(Customer i ,int k)
         {
             _Orders.Create(i);
             k.FromatForMoney();

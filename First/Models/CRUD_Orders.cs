@@ -5,24 +5,24 @@ using System.Web;
 
 namespace First.Models
 {
-    public class CRUD_Orders : CRUDInterface<Table>
+    public class CRUD_Orders : CRUDInterface<Customer>
     {
 
-        public IEnumerable<Table> Get()
+        public IEnumerable<Customer> Get()
         {
             throw new NotImplementedException();
         }
-        public void Create(Table Item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(Table Item)
+        public void Create(Customer Item)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(Table Item)
+        public void Delete(Customer Item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(Customer Item)
         {
             throw new NotImplementedException();
         }

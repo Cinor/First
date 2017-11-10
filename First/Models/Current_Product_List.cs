@@ -12,11 +12,9 @@ namespace First.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Table
+    public partial class Current_Product_List
     {
-        public int Id { get; set; }
-        public string Subject { get; set; }
-        public string Content { get; set; }
-        public System.DateTime PostDateTime { get; set; }
+        public int ProductID { get; set; }
+        public string ProductName { get; set; }
     }
 }
