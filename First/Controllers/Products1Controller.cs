@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
@@ -10,25 +11,25 @@ using First.Models;
 
 namespace First.Controllers
 {
-    public class ProductsController : Controller
+    public class Products1Controller : Controller
     {
         private NorthwindEntities db = new NorthwindEntities();
 
-        // GET: Products
-        public ActionResult Index()
+        // GET: Products1
+        public async Task<ActionResult> Index()
         {
             var products = db.Products.Include(p => p.Category).Include(p => p.Supplier);
-            return View(products.ToList());
+            return View(await products.ToListAsync());
         }
 
-        // GET: Products/Details/5
-        public ActionResult Details(int? id)
+        // GET: Products1/Details/5
+        public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = db.Products.Find(id);
+            Product product = await db.Products.FindAsync(id);
             if (product == null)
             {
                 return HttpNotFound();
@@ -36,7 +37,7 @@ namespace First.Controllers
             return View(product);
         }
 
-        // GET: Products/Create
+        // GET: Products1/Create
         public ActionResult Create()
         {
             ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "CategoryName");
@@ -44,17 +45,17 @@ namespace First.Controllers
             return View();
         }
 
-        // POST: Products/Create
+        // POST: Products1/Create
         // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
         // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProductID,ProductName,SupplierID,CategoryID,QuantityPerUnit,UnitPrice,UnitsInStock,UnitsOnOrder,ReorderLevel,Discontinued")] Product product)
+        public async Task<ActionResult> Create([Bind(Include = "ProductID,ProductName,SupplierID,CategoryID,QuantityPerUnit,UnitPrice,UnitsInStock,UnitsOnOrder,ReorderLevel,Discontinued")] Product product)
         {
             if (ModelState.IsValid)
             {
                 db.Products.Add(product);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
@@ -63,15 +64,14 @@ namespace First.Controllers
             return View(product);
         }
 
-
-        // GET: Products/Edit/5
-        public ActionResult Edit(int? id)
+        // GET: Products1/Edit/5
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = db.Products.Find(id);
+            Product product = await db.Products.FindAsync(id);
             if (product == null)
             {
                 return HttpNotFound();
@@ -81,17 +81,17 @@ namespace First.Controllers
             return View(product);
         }
 
-        // POST: Products/Edit/5
+        // POST: Products1/Edit/5
         // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
         // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProductID,ProductName,SupplierID,CategoryID,QuantityPerUnit,UnitPrice,UnitsInStock,UnitsOnOrder,ReorderLevel,Discontinued")] Product product)
+        public async Task<ActionResult> Edit([Bind(Include = "ProductID,ProductName,SupplierID,CategoryID,QuantityPerUnit,UnitPrice,UnitsInStock,UnitsOnOrder,ReorderLevel,Discontinued")] Product product)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(product).State = EntityState.Modified;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "CategoryName", product.CategoryID);
@@ -99,86 +99,29 @@ namespace First.Controllers
             return View(product);
         }
 
-
-        /// <summary>
-        /// 6-109 UpdateModel 原先傳入的空物件就與傳入的表單資料進行Binding賦值並正確儲存
-        /// </summary>
-        /// <returns></returns>
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit()
-        //{
-        //    Product product = new Product();
-        //    try
-        //    {
-        //        UpdateModel(product);
-        //        db.Entry(product).State = EntityState.Modified;
-        //        db.SaveChanges();
-        //    }
-        //    catch
-        //    {
-        //        return View(product);
-        //    }
-        //    return RedirectToAction("Index");
-        //}
-
-        ///UpdateModel and TryUpdateModel 兩者方法一樣 但會有資安上的疑慮
-
-        /// <summary>
-        /// 6-112 TryUpdateModel 原先傳入的空物件就與傳入的表單資料進行Binding賦值並正確儲存 
-        /// </summary>
-        /// <returns></returns>
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit()
-        //{
-        //    Product product = new Product();
-        //    TryUpdateModel(product);
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Entry(product).State = EntityState.Modified;
-        //        db.SaveChanges();
-        //        return RedirectToAction("Index");
-        //    }
-        //    else
-        //    {
-        //        return View(product);
-        //    }
-
-        //}
-
-        // GET: Products/Delete/5
-        public ActionResult Delete(int? id)
+        // GET: Products1/Delete/5
+        public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = db.Products.Find(id);
+            Product product = await db.Products.FindAsync(id);
             if (product == null)
             {
                 return HttpNotFound();
             }
-
-            if (!Request.IsAjaxRequest())
-            {
-                return View(product);
-            }
-            else
-            {
-                return Json(product, JsonRequestBehavior.AllowGet);
-            }
-            
+            return View(product);
         }
 
-        // POST: Products/Delete/5
+        // POST: Products1/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Product product = db.Products.Find(id);
+            Product product = await db.Products.FindAsync(id);
             db.Products.Remove(product);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 

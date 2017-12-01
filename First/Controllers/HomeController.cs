@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using First.Models;
+using First.Filters;
+using System.Web.Mvc.Filters;
 
 namespace First.Controllers
 {
@@ -11,18 +13,34 @@ namespace First.Controllers
     {
         CRUD_Orders _Orders = new CRUD_Orders();
 
-        public ActionResult Index(Customer i ,int k)
+        protected override void OnAuthentication(AuthenticationContext filterContext)
         {
-            _Orders.Create(i);
-            k.FromatForMoney();
+            base.OnAuthentication(filterContext);
+        }
 
+        protected override void OnAuthenticationChallenge(AuthenticationChallengeContext filterContext)
+        {
+            base.OnAuthenticationChallenge(filterContext);
+        }
+
+        [Mvc5Authv1]
+        public ActionResult Index()
+        {
             return View();
         }
 
+        //public ActionResult Index(Customer i ,int k)
+        //{
+        //    _Orders.Create(i);
+        //    k.FromatForMoney();
+
+        //    return View();
+        //}
+
+        [Mvc5Authv2]
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
-
             return View();
         }
 
